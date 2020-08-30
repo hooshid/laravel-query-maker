@@ -138,7 +138,7 @@ class QueryMaker extends Builder
     }
 
     /**
-     * Create a new QueryBuilder for a request and model.
+     * Create a new QueryMaker for a request and model.
      *
      * @param string|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation $baseQuery Model class or base query builder
      * @param \Illuminate\Http\Request $request
@@ -363,11 +363,4 @@ class QueryMaker extends Builder
 
         return true;
     }
-
-
-
-
-
-
-
 }
