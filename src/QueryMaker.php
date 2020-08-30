@@ -147,6 +147,11 @@ class QueryMaker extends Builder
      */
     public static function for($baseQuery, ?Request $request = null): self
     {
+        if (is_string($baseQuery)) {
+            /** @var Builder $baseQuery */
+            $baseQuery = $baseQuery::query();
+        }
+
         return new static($baseQuery, $request ?? app(Request::class));
     }
 
