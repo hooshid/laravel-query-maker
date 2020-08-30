@@ -1,0 +1,34 @@
+{
+    "name": "hooshid/laravel-query-maker",
+    "description": "A Elegant Query Maker",
+    "keywords": ["laravel", "query-builder", "query-maker", "query-generator", "hooshid"],
+    "homepage": "https://github.com/hooshid/laravel-query-maker",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alireza Kamali",
+            "email": "arka1373@gmail.com",
+            "homepage": "https://github.com/arkamali",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0",
+        "illuminate/support": "^6|^7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hooshid\\QueryMaker\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hooshid\\QueryMaker\\QueryMakerServiceProvider"
+            ]
+        }
+    }
+}
