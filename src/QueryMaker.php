@@ -130,7 +130,7 @@ class QueryMaker extends Builder
 
         $this->model = $model;
 
-        $this->table = $this->getModel()->getTable();
+        $this->table = $this->model->getModel()->getTable();
 
         $this->query = $this->model->newQuery();
 
