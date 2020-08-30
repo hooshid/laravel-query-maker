@@ -118,15 +118,16 @@ class QueryMaker extends Builder
      */
     protected $joinedTables = [];
 
-
     /**
-     * Get Eloquent query instance.
+     * QueryMaker constructor.
      *
-     * @param Model $model
-     * @param Request $request
+     * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation $model
+     * @param null|\Illuminate\Http\Request $request
      */
-    public function __construct(Model $model, Request $request)
+    public function __construct($model, ?Request $request = null)
     {
+        parent::__construct(clone $model->getQuery());
+
         $this->model = $model;
 
         $this->table = $this->model->getTable();
@@ -134,6 +135,19 @@ class QueryMaker extends Builder
         $this->query = $this->model->newQuery();
 
         $this->request = $request;
+    }
+
+    /**
+     * Create a new QueryBuilder for a request and model.
+     *
+     * @param string|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation $baseQuery Model class or base query builder
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Hooshid\QueryMaker\QueryMaker
+     */
+    public static function for($baseQuery, ?Request $request = null): self
+    {
+        return new static($baseQuery, $request ?? app(Request::class));
     }
 
     /**
@@ -349,5 +363,11 @@ class QueryMaker extends Builder
 
         return true;
     }
+
+
+
+
+
+
 
 }
