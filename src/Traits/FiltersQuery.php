@@ -228,7 +228,7 @@ trait FiltersQuery
                 return $tableAndColumn[0];
             }
         }
-        return $key;
+        return $this->table . "." . $key;
     }
 
     /**

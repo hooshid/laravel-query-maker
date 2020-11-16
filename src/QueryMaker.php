@@ -308,7 +308,8 @@ class QueryMaker extends Builder
 
         // detect current model data
         $baseModel = $this->getModel();
-        $baseTable = $baseModel->getTable();
+		$baseTable = $baseModel->model->getTable();
+        //$baseTable = $baseModel->getTable();
         //$basePrimaryKey = $baseModel->getKeyName();
 
         $currentModel = $baseModel;
@@ -316,11 +317,13 @@ class QueryMaker extends Builder
 
 
         /** @var Relation $relatedRelation */
-        $relatedRelation = $currentModel->$relation();
+		$relatedRelation = $baseModel->getModel()->$relation();
+        //$relatedRelation = $currentModel->$relation();
         $relatedModel = $relatedRelation->getRelated();
         $relatedPrimaryKey = $relatedModel->getKeyName();
         $relatedTable = $relatedModel->getTable();
-        $relatedTableAlias = $this->useTableAlias ? sha1($relatedTable) : $relatedTable;
+        //$relatedTableAlias = $this->useTableAlias ? sha1($relatedTable) : $relatedTable;
+		$relatedTableAlias = $relatedTable .'_'. rand(1,999999999);
 
         $relationsAccumulated[] = $relatedTableAlias;
         $relationAccumulatedString = implode('_', $relationsAccumulated);
@@ -331,8 +334,8 @@ class QueryMaker extends Builder
         }
 
         if (!in_array($relationAccumulatedString, $this->joinedTables)) {
-            $joinQuery = $relatedTable . ($this->useTableAlias ? ' as ' . $relatedTableAlias : '');
-
+            //$joinQuery = $relatedTable . ($this->useTableAlias ? ' as ' . $relatedTableAlias : '');
+			$joinQuery = $relatedTable . ' as ' . $relatedTableAlias;
 
             if ($relatedRelation instanceof BelongsTo) {
                 $relatedKey = $relatedRelation->getQualifiedForeignKeyName();
@@ -363,7 +366,7 @@ class QueryMaker extends Builder
                 $prefixColumns = Str::snake($relation);
             }
 
-            $this->selectColumns($columns, $relatedTable, $prefixColumns);
+            $this->selectColumns($columns, $$relatedTableAlias, $prefixColumns);
         }
 
         return true;
