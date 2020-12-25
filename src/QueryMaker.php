@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Hooshid\QueryMaker\Traits\SearchQuery;
 use Hooshid\QueryMaker\Traits\FiltersQuery;
 use Hooshid\QueryMaker\Traits\OrderQuery;
 use Hooshid\QueryMaker\Traits\LimitQuery;
@@ -21,7 +22,8 @@ use Hooshid\QueryMaker\Exceptions\InvalidRelation;
 
 class QueryMaker extends Builder
 {
-    use FiltersQuery,
+    use SearchQuery,
+        FiltersQuery,
         OrderQuery,
         LimitQuery,
         AppendAttributesToResults,
@@ -162,6 +164,9 @@ class QueryMaker extends Builder
      */
     public function build()
     {
+        // set search to query
+        $this->resolveSearch();
+
         // set filters to query
         $this->resolveFilters();
 
@@ -366,7 +371,7 @@ class QueryMaker extends Builder
                 $prefixColumns = Str::snake($relation);
             }
 
-            $this->selectColumns($columns, $$relatedTableAlias, $prefixColumns);
+            $this->selectColumns($columns, $relatedTableAlias, $prefixColumns);
         }
 
         return true;

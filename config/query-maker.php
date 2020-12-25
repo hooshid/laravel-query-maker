@@ -12,7 +12,7 @@ return [
         ],
     ],
 
-    // excluded parameters to filters
+    // excluded parameters to filters and search
     'excluded_parameters' => ['token', 'password'],
 
     /*
@@ -27,6 +27,8 @@ return [
         'filter' => 'filter',
 
         'order' => 'order',
+
+        'search' => 'search',
     ],
 
 
