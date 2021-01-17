@@ -7,8 +7,6 @@ use Illuminate\Support\Str;
 
 trait SearchQuery
 {
-    protected $search = null;
-
     /**
      * Resolve search
      *
@@ -17,7 +15,8 @@ trait SearchQuery
     private function resolveSearch()
     {
         if ($this->request->get(config('query-maker.parameters.search'))) {
-            $this->search = strip_tags($this->request->get(config('query-maker.parameters.search')));
+            $search = trim(strip_tags($this->request->get(config('query-maker.parameters.search'))));
+            $columns = [];
 
             foreach ($this->columns as $column) {
                 $match = Str::of($column)->explode(' as ');
@@ -27,12 +26,16 @@ trait SearchQuery
                         $explode = Str::of($col)->explode('.');
                         $tableColumns = DB::select('SHOW FULL COLUMNS FROM ' . $explode[0]);
                         foreach ($tableColumns as $tableColumn) {
-                            $this->addSearchWhereToQuery("{$explode[0]}.{$tableColumn->Field}");
+                            $columns[] = "{$explode[0]}.{$tableColumn->Field}";
                         }
                     } else {
-                        $this->addSearchWhereToQuery("{$col}");
+                        $columns[] = $col;
                     }
                 }
+            }
+
+            if (isset($columns)) {
+                $this->addSearchWhereToQuery($columns, $search);
             }
         }
 
@@ -42,12 +45,30 @@ trait SearchQuery
     /**
      * add search where to query
      *
+     * @param $fields
+     * @param $search
+     * @return void
+     */
+    private function addSearchWhereToQuery($fields, $search)
+    {
+        $this->query->where(function ($query) use ($fields, $search) {
+            foreach ($fields as $field) {
+                if ($this->checkFieldCanBeQueried($field)) {
+                    $query->orWhere($field, 'LIKE', "%{$search}%");
+                }
+            }
+        });
+    }
+
+    /**
+     * check field condition fo query
+     *
      * @param $field
      * @return bool
      */
-    private function addSearchWhereToQuery($field)
+    private function checkFieldCanBeQueried($field)
     {
-        if (Str::endsWith($field, ['_id', '_at', '_url', '_date'])) {
+        if (Str::endsWith($field, ['_id', '_at', '_date'])) {
             return false;
         }
 
@@ -55,6 +76,6 @@ trait SearchQuery
             return false;
         }
 
-        $this->query->orWhere($field, 'LIKE', "%{$this->search}%");
+        return true;
     }
 }

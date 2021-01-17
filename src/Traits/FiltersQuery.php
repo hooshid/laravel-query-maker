@@ -65,6 +65,7 @@ trait FiltersQuery
                 $value = str_replace($queryParameters[0] . ',', '', $value);
                 $value = strip_tags($value);
                 $value = str_replace('*', '%', $value);
+                $value = trim($value);
             }
 
             $operator = $this->setOperator($queryParameters[0]);

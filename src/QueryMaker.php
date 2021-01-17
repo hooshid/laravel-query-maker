@@ -216,6 +216,28 @@ class QueryMaker extends Builder
     }
 
     /**
+     * build query and response data as structured
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
+     */
+    public function buildAndGetData()
+    {
+        $this->build();
+        $data = $this->getData();
+
+        return response()->json([
+            'data' => $data->items(),
+            'paginate' => [
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
+            ],
+        ], 200);
+    }
+
+    /**
      * Execute the query as a "select" statement.
      *
      * @param array|string $columns
