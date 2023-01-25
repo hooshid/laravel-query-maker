@@ -25,6 +25,8 @@ return [
         'limit' => 'limit',
 
         'filter' => 'filter',
+        
+        'conditions' => 'conditions',
 
         'order' => 'order',
 
