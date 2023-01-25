@@ -8,7 +8,8 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Hooshid\QueryMaker\Traits\SearchQuery;
-use Hooshid\QueryMaker\Traits\FiltersQuery;
+// use Hooshid\QueryMaker\Traits\FiltersQuery;
+use Hooshid\QueryMaker\Traits\ConditionsQuery;
 use Hooshid\QueryMaker\Traits\OrderQuery;
 use Hooshid\QueryMaker\Traits\LimitQuery;
 use Hooshid\QueryMaker\Traits\AppendAttributesToResults;
@@ -23,7 +24,8 @@ use Hooshid\QueryMaker\Exceptions\InvalidRelation;
 class QueryMaker extends Builder
 {
     use SearchQuery,
-        FiltersQuery,
+        // FiltersQuery,
+	ConditionsQuery,
         OrderQuery,
         LimitQuery,
         AppendAttributesToResults,
@@ -168,7 +170,10 @@ class QueryMaker extends Builder
         $this->resolveSearch();
 
         // set filters to query
-        $this->resolveFilters();
+        // $this->resolveFilters();
+	    
+	// set conditions to query
+        $this->resolveConditions();
 
         // set orders to query
         $this->resolveOrders();
