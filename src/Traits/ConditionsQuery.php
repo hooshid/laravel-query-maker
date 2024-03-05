@@ -57,12 +57,16 @@ trait ConditionsQuery
             $key = $this->findRealNameOfAliasColumn($item->key);
 
             if ($key) {
+                $comparison = $this->setOperator($item->comparison);
+
                 // prepare value
                 $value = strip_tags($item->value);
                 $value = str_replace('*', '%', $value);
                 $value = trim($value);
 
-                $comparison = $this->setOperator($item->comparison);
+                if($item->comparison === "like_wildcard" or $item->comparison === "unlike_wildcard"){
+                    $value = '%' . $value . '%';
+                }
 
                 $this->queryParameters[] = [
                     'key' => $key,
@@ -93,9 +97,9 @@ trait ConditionsQuery
             return '<';
         } elseif ($name === "lte") {
             return '<=';
-        } elseif ($name === "like") {
+        } elseif ($name === "like" or $name === "like_wildcard") {
             return "like";
-        } elseif ($name === "unlike") {
+        } elseif ($name === "unlike" or $name === "unlike_wildcard") {
             return "not like";
         } elseif ($name === "between") {
             return 'between';
