@@ -25,7 +25,7 @@ class QueryMaker extends Builder
 {
     use SearchQuery,
         // FiltersQuery,
-	ConditionsQuery,
+        ConditionsQuery,
         OrderQuery,
         LimitQuery,
         AppendAttributesToResults,
