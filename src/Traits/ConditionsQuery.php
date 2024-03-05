@@ -81,9 +81,9 @@ trait ConditionsQuery
      */
     private function setOperator($name)
     {
-        if ($name === "eq") {
+        if ($name === "eq" or $name === "equal") {
             return '=';
-        } elseif ($name === "uneq") {
+        } elseif ($name === "uneq" or $name === "unequal") {
             return '!=';
         } elseif ($name === "gt") {
             return '>';
